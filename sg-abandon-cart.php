@@ -16,6 +16,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if (!defined('SG_ABANDON_CART_DIR')) :
+    define('SG_ABANDON_CART_DIR', plugin_dir_path(__FILE__));
+    define('SG_ABANDON_CART_URL', plugins_url('/', __FILE__));
+endif;
+
 add_action('plugins_loaded', function(){
 
     if (!class_exists('WooCommerce')) {
@@ -35,13 +40,20 @@ add_action('plugins_loaded', function(){
 
 
 //loads the files inside include in the current plugin directory
-require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
+require_once SG_ABANDON_CART_DIR . 'includes/functions.php';
+if(is_admin()){
+    require_once SG_ABANDON_CART_DIR . 'admin/sg-abandon-cart-admin.php';
+    require_once SG_ABANDON_CART_DIR . 'admin/metabox/metabox.php';
+    require_once SG_ABANDON_CART_DIR . 'admin/includes/enqueue.php';
+    require_once SG_ABANDON_CART_DIR . 'admin/includes/functions.php';
+    require_once SG_ABANDON_CART_DIR . 'admin/includes/sg-abandon-cart-db.php';
+}
 
 
 
 //load files if in admin dashboard
 if(is_admin()){
-    require_once plugin_dir_path(__FILE__) . 'admin/sg-abandon-cart-admin.php';
+    require_once SG_ABANDON_CART_DIR . 'admin/sg-abandon-cart-admin.php';
 }
 
 
@@ -50,6 +62,7 @@ if(is_admin()){
  */
 register_activation_hook(__FILE__,function(){
     error_log("SG Abandon Cart plugin activated");
+    create_abandon_cart_table();
 });
 
 
