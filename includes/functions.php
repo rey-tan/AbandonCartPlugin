@@ -19,6 +19,7 @@ function sg_abandon_cart_create_table() {
         created_at DATETIME NOT NULL,
         updated_at DATETIME NOT NULL,
         abandoned TINYINT(1) NOT NULL DEFAULT 0,
+        cart_amount DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
 
         PRIMARY KEY (id),
         UNIQUE KEY cart_hash (cart_hash),
